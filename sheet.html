@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.3, maximum-scale=6, user-scalable=yes, viewport-fit=cover">
 <title>جدولي</title>
 <meta name="theme-color" content="#107C41">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACR0lEQVR4nO3bwU0CURRA0dHoHjqwFa1LV5ZiH7ZgC3bAxp0bFyaGBO8K5yHhnAYe/FzehGT+1ebxfoHfXJ/6A/B/iYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIg3cyM+XzfzQy6HLd327VH2BwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRykobfPJ/28lj3zyvvwuElDcXy8vM0MWpZl+/QwOXR43OHc9XiskMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgfpavN4f+rPwD9lc5DEQRq6Drl7fp0ZtOzdE5wZOjzucO56bA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImD5K4syeYgiYPkruyZjTucux6bgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iANxTHwNuxFmTlPm4M0F4fl8VfGTnJ0c+jjeJNnOP1Y0ccxhk9v6Mbbvu9vOHw/7Nyd5Efllj3JvxWSOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImDJA6SOEjiIImD9AU+8jOXoh2CGwAAAABJRU5ErkJggg==">
@@ -23,7 +23,7 @@ button,input,select{font:inherit;color:inherit}
 .ribbon{background:#f3f3f3;border-bottom:1px solid var(--line);padding:6px;display:flex;gap:6px;overflow-x:auto;align-items:center;min-height:50px}
 .ribbon[hidden]{display:none}
 .ribbon button,.ribbon select,.ribbon label.cp{background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer;white-space:nowrap;font-size:.85rem;display:inline-flex;align-items:center;gap:4px}
-.ribbon button.on{background:#cfe8d9;border-color:var(--g)}
+.ribbon button.on{background:#ffd35c;border-color:var(--g)}
 .ribbon input[type=color]{width:24px;height:22px;border:0;padding:0;background:none}
 .sep{width:1px;align-self:stretch;background:var(--line);margin:0 2px}
 .fb{display:flex;align-items:center;border-bottom:1px solid var(--line);background:#fff}
@@ -32,11 +32,11 @@ button,input,select{font:inherit;color:inherit}
 #fx{flex:1;border:0;padding:8px;direction:ltr;text-align:left;min-width:0;background:#fff;outline:none}
 .wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;direction:ltr}
 table{border-collapse:collapse}
-th,td{border:1px solid var(--line);padding:0;min-width:104px;height:34px;background:#fff}
+th,td{border:1px solid var(--line);padding:0;min-width:64px;height:24px;background:#fff}
 th{background:var(--hd);font-weight:500;position:sticky;top:0;z-index:2;font-size:.85rem;color:#444}
 th.rh,td.rh{background:var(--hd);min-width:38px;width:38px;text-align:center;font-size:.85rem;color:#444;position:sticky;left:0;z-index:1}
 th.rh{z-index:3}
-th.hl,td.rh.hl{background:#cfe8d9;color:var(--g);font-weight:700}
+th.hl,td.rh.hl{background:#ffd35c;color:var(--g);font-weight:700}
 td input{width:100%;height:100%;border:0;background:transparent;padding:0 8px;direction:ltr;text-align:left;outline:none;min-width:0}
 td.sel{outline:2px solid var(--sel);outline-offset:-2px}
 .msg{padding:5px 10px;font-size:.8rem;color:#555;border-top:1px solid var(--line);background:#fafafa;min-height:26px}
@@ -49,38 +49,90 @@ td.sel{outline:2px solid var(--sel);outline-offset:-2px}
 .shm[hidden]{display:none}
 .shm>button{background:transparent;border:0;text-align:left;padding:8px 14px;cursor:pointer;font-size:.9rem;color:#000}.shm>button:not(:disabled):hover,.shm>button:not(:disabled):active{background:#fde8a8}
 table.ng th,table.ng td{border-color:transparent}
+
+:root{--g:#1f4e8c;--gd:#15396a;--line:#c5d0e0;--hd:#e3ebf6;--sel:#000}
+body{background:#dfe8f5}
+.title{background:linear-gradient(#e9f0fa,#cfdcee);color:#1b2d4a;border-bottom:1px solid #8db2e3;padding:6px 12px;font-weight:600}
+.tabs{background:#cfdcee;padding:2px 8px 0;direction:ltr}
+.tabs button{color:#15428b;padding:6px 12px;border:1px solid transparent;border-bottom:0;border-radius:4px 4px 0 0}
+.tabs button.on{background:linear-gradient(#f4f8fd,#dbe6f4);border-color:#8db2e3;color:#15428b;font-weight:600}
+.ribbon{background:linear-gradient(#dbe6f4,#c7d9ef 55%,#d5e3f5);border:1px solid #8db2e3;border-left:0;border-right:0;direction:ltr}
+.ribbon button,.ribbon select,.ribbon label.cp{background:linear-gradient(#fdfdfe,#e6eef9);border:1px solid #9fb8da;border-radius:3px;color:#1b2d4a}
+.ribbon button.on{background:linear-gradient(#ffe8a6,#ffd35c);border-color:#d9a21b}
+.sep{background:#8db2e3}
+.fb{background:#f4f8fd;border-bottom:1px solid #8db2e3}
+.fxl{color:#15428b}
+th{background:linear-gradient(#f2f6fc,#d9e4f3);color:#1b2d4a;border-color:#9fb8da}
+th.rh,td.rh{background:linear-gradient(90deg,#f2f6fc,#d9e4f3);color:#1b2d4a;border-color:#9fb8da}
+th.hl,td.rh.hl{background:linear-gradient(#ffe8a6,#ffd35c);color:#000;font-weight:600}
+td{border-color:#d0d7e5}
+td.sel{outline:2px solid #000}
+.sheets{background:linear-gradient(#e9f0fa,#cfdcee);border-top:1px solid #8db2e3}
+.sheets button{background:#e3ebf6;border-color:#9fb8da;border-radius:0 0 6px 6px;border-top:0;border-bottom:1px solid #9fb8da;color:#1b2d4a}
+.sheets button.on{background:#fff;color:#000;font-weight:700;border-bottom:3px solid #4a7ebb}
+.sheets button.add{color:#15428b;background:transparent}
+.msg{background:linear-gradient(#e9f0fa,#cfdcee);color:#1b2d4a;border-top:1px solid #8db2e3}
+
+#r-home{align-items:stretch;padding:4px 4px 0;min-height:96px}
+.grp{display:flex;flex-direction:column;border-right:1px solid #8db2e3;padding:0 6px;flex:none}
+.gb{display:flex;gap:4px;align-items:stretch;flex:1}
+.gb.col,.col{flex-direction:column;display:flex;gap:3px;justify-content:center}
+.row{display:flex;gap:3px;align-items:center}
+.lbl{text-align:center;font-size:.72rem;color:#3b5b8c;padding:2px 0 3px}
+#r-home button,#r-home select,#r-home label.cp{padding:4px 7px;font-size:.8rem;border-radius:3px}
+#r-home button.big{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:56px;white-space:normal;text-align:center}
+.big .ic{font-size:1.5rem;line-height:1.1}
+#r-home select{background:#fff;border:1px solid #9fb8da}
+
+td input{font-size:13px;padding:0 4px}
+th{font-size:.75rem}
+th.rh,td.rh{min-width:34px;width:34px;font-size:.72rem}
+.msg{display:flex;align-items:center;gap:8px}
+.msg #zs{margin-left:auto;display:flex;align-items:center;gap:6px;direction:ltr}
+.msg #zs button{width:28px;height:24px;border:1px solid #9fb8da;background:#fff;border-radius:3px;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="title"><span>جدولي</span><span style="font-weight:400;font-size:.8rem">Excel</span></div>
+<div class="title"><span>جدولي - Microsoft Excel</span><span></span></div>
 <div class="tabs" id="tabs">
-  <button type="button" class="on" data-p="home">الرئيسية</button>
-  <button type="button" data-p="insert">إدراج</button>
-  <button type="button" data-p="formulas">معادلات</button>
-  <button type="button" data-p="data">بيانات</button>
-  <button type="button" data-p="view">عرض</button>
+  <button type="button" class="on" data-p="home">Home</button>
+  <button type="button" data-p="insert">Insert</button>
+  <button type="button" data-p="formulas">Formulas</button>
+  <button type="button" data-p="data">Data</button>
+  <button type="button" data-p="view">View</button>
 </div>
 <div class="ribbon" id="r-home">
-  <button type="button" id="fB"><b>B</b></button>
-  <button type="button" id="fI"><i>I</i></button>
-  <span class="sep"></span>
-  <label class="cp">تعبئة <input type="color" id="fBg" value="#ffff00"></label>
-  <label class="cp">لون الخط <input type="color" id="fFg" value="#c00000"></label>
-  <button type="button" id="fNoClr">بدون لون</button>
-  <span class="sep"></span>
-  <button type="button" data-al="left">يسار</button>
-  <button type="button" data-al="center">وسط</button>
-  <button type="button" data-al="right">يمين</button>
-  <span class="sep"></span>
-  <select id="fNf"><option value="">عام</option><option value="cur">جنيه</option><option value="pct">%</option><option value="d2">٢ عشري</option></select>
-  <span class="sep"></span>
-  <button type="button" data-sh="shIns">إدراج شيت</button>
-  <button type="button" data-sh="shDel">حذف شيت</button>
-  <button type="button" data-sh="shRen">Rename</button>
-  <button type="button" data-sh="shDup">نسخ شيت</button>
-  <label class="cp">لون الشيت <input type="color" id="shClr" value="#ff0000"></label>
-  <button type="button" data-sh="shHide">إخفاء شيت</button>
-  <button type="button" data-sh="shUnh">إظهار شيت</button>
+ <div class="grp"><div class="gb">
+  <button type="button" class="big" id="cbPaste"><span class="ic">&#128203;</span>Paste</button>
+  <div class="col"><button type="button" id="cbCut">&#9986; Cut</button><button type="button" id="cbCopy">&#10064; Copy</button></div>
+ </div><div class="lbl">Clipboard</div></div>
+ <div class="grp"><div class="gb col">
+  <div class="row"><select id="fFf"><option>Calibri</option><option>Arial</option><option>Times New Roman</option><option>Courier New</option><option>Tahoma</option></select><select id="fFs"><option>9</option><option>10</option><option selected>11</option><option>12</option><option>14</option><option>16</option><option>18</option><option>24</option></select><button type="button" id="fA1">A&#9652;</button><button type="button" id="fA2">A&#9662;</button></div>
+  <div class="row"><button type="button" id="fB"><b>B</b></button><button type="button" id="fI"><i>I</i></button><button type="button" id="fU"><u>U</u></button><button type="button" id="fBd">&#9638;</button><label class="cp"><span style="background:#ff0;padding:0 5px">&#9608;</span><input type="color" id="fBg" value="#ffff00"></label><label class="cp"><b style="color:#c00">A</b><input type="color" id="fFg" value="#c00000"></label><button type="button" id="fNoClr">&#10005;</button></div>
+ </div><div class="lbl">Font</div></div>
+ <div class="grp"><div class="gb col">
+  <div class="row"><button type="button" data-al="left">&#8676;</button><button type="button" data-al="center">&#8801;</button><button type="button" data-al="right">&#8677;</button></div>
+  <div class="row"><button type="button" id="fWrap">Wrap Text</button></div>
+ </div><div class="lbl">Alignment</div></div>
+ <div class="grp"><div class="gb col">
+  <div class="row"><select id="fNf"><option value="">General</option><option value="cur">Currency</option><option value="pct">Percentage</option><option value="d2">Number 0.00</option></select></div>
+  <div class="row"><button type="button" data-nf="cur">$</button><button type="button" data-nf="pct">%</button><button type="button" data-nf="d2">,</button><button type="button" data-nf="">.0</button></div>
+ </div><div class="lbl">Number</div></div>
+ <div class="grp"><div class="gb">
+  <button type="button" class="big" id="stHead"><span class="ic">&#127912;</span>Styles</button>
+ </div><div class="lbl">Styles</div></div>
+ <div class="grp"><div class="gb col">
+  <button type="button" id="ceIns">Insert &#9662;</button><button type="button" id="ceDel">Delete &#9662;</button><button type="button" id="ceFmt">Format &#9662;</button>
+ </div><div class="lbl">Cells</div></div>
+ <div class="grp"><div class="gb">
+  <div class="col"><button type="button" id="edSum">&#931; AutoSum</button><button type="button" id="edFill">Fill</button></div>
+  <button type="button" class="big" id="edSort"><span class="ic">&#9660;</span>Sort &amp; Filter</button>
+  <button type="button" class="big" id="edFind"><span class="ic">&#128269;</span>Find &amp; Select</button>
+ </div><div class="lbl">Editing</div></div>
+ <div class="grp"><div class="gb col">
+  <div class="row"><button type="button" data-sh="shIns">Insert Sheet</button><button type="button" data-sh="shDel">Delete Sheet</button><button type="button" data-sh="shRen">Rename</button><button type="button" data-sh="shDup">Copy Sheet</button></div>
+  <div class="row"><label class="cp">Tab Color <input type="color" id="shClr" value="#ff0000"></label><button type="button" data-sh="shHide">Hide</button><button type="button" data-sh="shUnh">Unhide</button></div>
+ </div><div class="lbl">Sheets</div></div>
 </div>
 <div class="ribbon" id="r-insert" hidden>
   <button type="button" id="addRow">+ صف</button>
@@ -136,12 +188,12 @@ table.ng th,table.ng td{border-color:transparent}
 <button type="button" id="shMoreL" hidden></button><button type="button" id="shMoreR" hidden></button>
 </div>
 <div class="sheets" id="sheets"></div>
-<div class="msg" id="msg">اختار خلية واكتب. المعادلات بتبدأ بعلامة = مثل <bdi dir="ltr">=SUM(A1:A5)</bdi></div>
+<div class="msg"><span id="msg">اختار خلية واكتب. المعادلات بتبدأ بعلامة = مثل <bdi dir="ltr">=SUM(A1:A5)</bdi></span><span id="zs"><button type="button" id="zm">-</button><span id="zp">100%</span><button type="button" id="zpl">+</button></span></div>
 <script>
 (function(){
   var KEY="sheet-v3";
   var store=null,d;
-  function mk(n){return {name:n,rows:30,cols:10,cells:{},fmt:{}};}
+  function mk(n){return {name:n,rows:100,cols:26,cells:{},fmt:{}};}
   try{store=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(!store||!store.sheets||!store.sheets.length){
     var first=mk("Sheet1");
@@ -149,6 +201,7 @@ table.ng th,table.ng td{border-color:transparent}
       if(o&&o.cells){first.cells=o.cells;first.fmt=o.fmt||{};first.rows=Math.max(30,o.rows);first.cols=Math.max(10,o.cols);}}catch(e){}
     store={sheets:[first,mk("Sheet2"),mk("Sheet3")],cur:0,zoom:1,grid:true};
   }
+  store.sheets.forEach(function(x){x.rows=Math.max(x.rows,100);x.cols=Math.max(x.cols,26);});
   if(store.cur>=store.sheets.length)store.cur=0;
   d=store.sheets[store.cur];
   var $=function(i){return document.getElementById(i);};
@@ -222,6 +275,7 @@ table.ng th,table.ng td{border-color:transparent}
     i.style.fontWeight=f.b?"700":"";
     i.style.fontStyle=f.i?"italic":"";
     i.style.textAlign=f.al||"";
+    i.style.fontFamily=f.ff||"";i.style.fontSize=f.fs?f.fs+"px":"";i.style.textDecoration=f.u?"underline":"";td.style.boxShadow=f.bd?"inset 0 0 0 1px #000":"";
   }
   function build(){
     var h="<tr><th class='rh'></th>";
@@ -416,11 +470,47 @@ table.ng th,table.ng td{border-color:transparent}
   $("shClr").addEventListener("input",function(){d.color=this.value;save();renderSheets();});
   $("shPro").onclick=function(){d.prot=!d.prot;$("msg").textContent=d.prot?"الشيت محمي من التعديل":"تم إلغاء الحماية";save();$("shm").hidden=true;};
   $("shAll").onclick=function(){$("msg").textContent="تحديد كل الشيتات غير متاح حاليا";$("shm").hidden=true;};
+  // شريط Home الجديد
+  var clip=null;
+  function cur(){var k=key(sel.r,sel.c);return {raw:raw(sel.r,sel.c),fmt:JSON.parse(JSON.stringify(d.fmt[k]||{}))};}
+  function setFmtAll(f){d.fmt[key(sel.r,sel.c)]=f;save();}
+  function cellInput(){return $("t").querySelector("td.sel input");}
+  function refreshCell(){var td=$("t").querySelector("td.sel");if(td){style(td);td.firstChild.value=show(sel.r,sel.c);}refresh();mark();}
+  $("cbCopy").onclick=function(){clip=cur();$("msg").textContent="تم النسخ";};
+  $("cbCut").onclick=function(){clip=cur();setRaw(sel.r,sel.c,"");refreshCell();$("msg").textContent="تم القص";};
+  $("cbPaste").onclick=function(){if(!clip){$("msg").textContent="مفيش حاجة منسوخة";return;}setRaw(sel.r,sel.c,clip.raw);setFmtAll(JSON.parse(JSON.stringify(clip.fmt)));refreshCell();};
+  $("fFf").onchange=function(){fmtSet({ff:$("fFf").value});};
+  $("fFs").onchange=function(){fmtSet({fs:+$("fFs").value});};
+  function bump(n){var f=d.fmt[key(sel.r,sel.c)]||{};fmtSet({fs:Math.max(7,Math.min(40,(f.fs||15)+n))});}
+  $("fA1").onclick=function(){bump(2);};$("fA2").onclick=function(){bump(-2);};
+  $("fU").onclick=function(){fmtSet({u:!(d.fmt[key(sel.r,sel.c)]||{}).u});};
+  $("fBd").onclick=function(){fmtSet({bd:!(d.fmt[key(sel.r,sel.c)]||{}).bd});};
+  $("fWrap").onclick=function(){$("msg").textContent="Wrap Text غير متاح حاليا";};
+  Array.prototype.forEach.call(document.querySelectorAll("[data-nf]"),function(b){b.onclick=function(){fmtSet({nf:b.dataset.nf});$("fNf").value=b.dataset.nf;};});
+  $("stHead").onclick=function(){fmtSet({b:true,bg:"#dbe6f4",fg:"#15428b"});};
+  $("ceIns").onclick=function(){$("addRow").click();};
+  $("ceDel").onclick=function(){$("delRow").click();};
+  $("ceFmt").onclick=function(){setFmtAll({});refreshCell();};
+  $("edSum").onclick=function(){
+    var r=sel.r-1,n=0;while(r>=0&&/^-?\d+(\.\d+)?$/.test(String(raw(r,sel.c)).trim())){r--;n++;}
+    if(!n){$("msg").textContent="مفيش أرقام فوق الخلية دي";return;}
+    setRaw(sel.r,sel.c,"=SUM("+key(r+1,sel.c)+":"+key(sel.r-1,sel.c)+")");refreshCell();};
+  $("edFill").onclick=function(){$("fill").click();};
+  $("edSort").onclick=function(){$("sortA").click();};
+  $("edFind").onclick=function(){
+    var q=prompt("دور على إيه؟");if(!q)return;q=q.toLowerCase();
+    for(var r=0;r<d.rows;r++)for(var c=0;c<d.cols;c++){
+      if(String(show(r,c)).toLowerCase().indexOf(q)>=0){var x=$("t").querySelector("td[data-r='"+r+"'][data-c='"+c+"'] input");if(x){x.focus();return;}}}
+    $("msg").textContent="مفيش نتيجة";};
   // عرض
   function applyView(){$("t").style.zoom=store.zoom||1;$("t").classList.toggle("ng",store.grid===false);}
-  $("zIn").onclick=function(){store.zoom=Math.min(2,(store.zoom||1)+0.15);save();applyView();};
-  $("zOut").onclick=function(){store.zoom=Math.max(0.5,(store.zoom||1)-0.15);save();applyView();};
+  $("zIn").onclick=function(){store.zoom=Math.min(2.5,(store.zoom||1)+0.15);save();applyView();};
+  $("zOut").onclick=function(){store.zoom=Math.max(0.4,(store.zoom||1)-0.15);save();applyView();};
   $("gridT").onclick=function(){store.grid=store.grid===false;save();applyView();};
+  function zp(){$("zp").textContent=Math.round((store.zoom||1)*100)+"%";}
+  $("zm").onclick=function(){store.zoom=Math.max(0.4,(store.zoom||1)-0.1);save();applyView();zp();};
+  $("zpl").onclick=function(){store.zoom=Math.min(2.5,(store.zoom||1)+0.1);save();applyView();zp();};
+  $("zIn").addEventListener("click",zp);$("zOut").addEventListener("click",zp);zp();
   renderSheets();build();applyView();
 })();
 </script>
