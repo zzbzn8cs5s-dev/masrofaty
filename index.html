@@ -104,6 +104,16 @@ form.mini .add{grid-column:1 / -1}
 #lock button{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:12px 36px;font-weight:700;cursor:pointer}
 #lockMsg{color:var(--danger);min-height:1.2em}
 body.locked main{display:none}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0 4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tabs button{background:transparent;border:0;border-radius:9px;padding:9px;font-weight:500;color:var(--muted);cursor:pointer}
+.tabs button.on{background:var(--bar);color:var(--ink)}
+.pg2[hidden],.pg1[hidden],.pg3[hidden]{display:none}
+#menuBtn{background:var(--surface);border:1px solid var(--line);border-radius:10px;width:40px;height:36px;display:grid;align-content:center;justify-items:center;gap:4px;cursor:pointer;padding:0}
+#menuBtn span{display:block;width:18px;height:2px;background:var(--ink);border-radius:2px}
+.menu{display:grid;gap:4px;margin:10px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px}
+.menu[hidden]{display:none}
+.menu button{background:transparent;border:0;border-radius:9px;padding:10px;font-weight:500;color:var(--muted);cursor:pointer;text-align:start}
+.menu button.on{background:var(--bar);color:var(--ink)}
 </style>
 </head>
 <body class="locked">
@@ -119,16 +129,17 @@ body.locked main{display:none}
   <div class="top">
     <h1>مصروفاتي</h1>
     <input type="month" id="month" aria-label="الشهر">
+    <button type="button" id="menuBtn" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
-
+  <div class="menu" id="menu" hidden><button type="button" class="on" data-p="1">الرئيسية</button><button type="button" data-p="2">بحث ومقارنة</button><button type="button" data-p="3">النسخة الاحتياطية</button></div>
+  <div class="pg1">
   <div class="row2" style="margin-top:18px">
     <p class="sub" style="margin:0">رصيد الشهر (الإضافات ناقص الخصومات)</p>
   </div>
   <div class="total" style="margin-top:2px"><span class="num" id="total" dir="ltr">0</span><span class="cur">جنيه</span></div>
   <p class="sub" id="count"></p>
-  <ul class="cats" id="cats"></ul>
+  <section class="card"><details class="fold" id="catFold"><summary>المصروفات حسب النوع</summary><ul class="cats" id="cats" style="margin:10px 0 0"></ul></details></section>
 
-  <section class="card" id="weekCard"><details class="fold" id="weekFold"><summary>ملخص الأسبوع</summary><div id="week" aria-live="polite"></div></details></section>
 
   <form id="form" autocomplete="off">
     <div class="seg" role="radiogroup" aria-label="نوع العملية">
@@ -189,6 +200,52 @@ body.locked main{display:none}
       <div id="owedList"></div>
     </details>
   </section>
+  </div>
+  <div class="pg2" hidden>
+  <section class="card" id="weekCard"><details class="fold" id="weekFold"><summary>ملخص الأسبوع</summary><div id="week" aria-live="polite"></div></details></section>
+  <section class="card">
+    <details class="fold" id="cmpFold"><summary>مقارنة</summary>
+      <div class="flt" id="cmpMode">
+        <button type="button" class="on" data-m="month">الشهر ده والشهر اللي فات</button>
+        <button type="button" data-m="week">الأسبوع ده واللي فات</button>
+      </div>
+      <div id="cmpOut"></div>
+    </details>
+  </section>
+  <section class="card">
+    <details class="fold" id="srFold"><summary>بحث بالتاريخ</summary>
+      <div class="flt" id="srType">
+        <button type="button" class="on" data-t="out">خصم</button>
+        <button type="button" data-t="in">إضافة</button>
+        <button type="button" data-t="all">الكل</button>
+      </div>
+      <label style="margin-bottom:8px">من يوم
+        <input type="date" id="srFrom" style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink);width:100%">
+      </label>
+      <label style="margin-bottom:8px">لحد يوم
+        <input type="date" id="srTo" style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink);width:100%">
+      </label>
+      <div id="srOut"></div>
+    </details>
+  </section>
+  <section class="card">
+    <details class="fold" id="nmFold"><summary>بحث بالاسم</summary>
+      <label style="margin-bottom:8px">الاسم (النوع أو الملاحظة)
+        <input type="text" id="srName" placeholder="مثلا: مواصلات" style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink);width:100%">
+      </label>
+      <div id="nmOut"></div>
+    </details>
+  </section>
+  <section class="card">
+    <details class="fold" id="amFold"><summary>بحث بالمبلغ</summary>
+      <label style="margin-bottom:8px">اكتب المبلغ
+        <input type="number" inputmode="decimal" id="srAmt" placeholder="مثلا: 50" style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink);width:100%">
+      </label>
+      <div id="amOut"></div>
+    </details>
+  </section>
+  </div>
+  <div class="pg3" hidden>
   <section class="card">
     <details class="fold" id="bkFold"><summary>نسخة احتياطية</summary>
       <p class="sub" style="margin:0 0 10px">احفظ نسخة من مصروفاتك، أو استرجعها لو غيرت الموبايل.</p>
@@ -198,6 +255,7 @@ body.locked main{display:none}
       <p class="msg" id="bkMsg" role="status"></p>
     </details>
   </section>
+  </div>
 </main>
 
 <script>
@@ -397,6 +455,133 @@ body.locked main{display:none}
     $("bkText").value = ""; bkMsg("اتسترجعت.");
   });
   // ===== نهاية النسخة الاحتياطية =====
+
+  // ===== مقارنة وبحث =====
+  var cmpMode = "month";
+  function range(m, back){
+    var now = new Date(); now.setHours(12,0,0,0);
+    if(m === "month"){
+      var a = new Date(now.getFullYear(), now.getMonth()-back, 1, 12), b = new Date(now.getFullYear(), now.getMonth()-back+1, 0, 12);
+      return [ds(a), ds(b)];
+    }
+    var s = new Date(now); s.setDate(s.getDate() - ((now.getDay()+1) % 7) - 7*back);
+    var e = new Date(s); e.setDate(e.getDate() + 6);
+    return [ds(s), ds(e)];
+  }
+  function inR(r){ return items.filter(function(x){ return x.date >= r[0] && x.date <= r[1]; }); }
+  function byCat(a){ var o = {}; a.filter(isOut).forEach(function(x){ o[x.cat] = (o[x.cat]||0) + x.amount; }); return o; }
+  function renderCmp(){
+    var cur = inR(range(cmpMode,0)), prev = inR(range(cmpMode,1));
+    var nm = cmpMode === "month" ? ["الشهر ده","الشهر اللي فات"] : ["الأسبوع ده","الأسبوع اللي فات"];
+    var ct = sum(cur.filter(isOut)), pt = sum(prev.filter(isOut));
+    var ca = sum(cur.filter(function(x){return !isOut(x);})), pa = sum(prev.filter(function(x){return !isOut(x);}));
+    var h = '<div class="wk">';
+    h += '<div class="line"><span>الخصومات: '+nm[0]+'</span><span>'+fmt(ct)+' جنيه</span></div>';
+    h += '<div class="line"><span>الخصومات: '+nm[1]+'</span><span>'+fmt(pt)+' جنيه</span></div>';
+    var d = ct - pt;
+    h += d>0 ? '<div class="line up">زيادة '+fmt(d)+' جنيه</div>' : d<0 ? '<div class="line down">أقل بـ '+fmt(-d)+' جنيه</div>' : '<div class="line">زي بعض</div>';
+    h += '<div class="line"><span>الإضافات: '+nm[0]+'</span><span>'+fmt(ca)+' جنيه</span></div>';
+    h += '<div class="line"><span>الإضافات: '+nm[1]+'</span><span>'+fmt(pa)+' جنيه</span></div>';
+    var c1 = byCat(cur), c0 = byCat(prev), keys = {};
+    Object.keys(c1).concat(Object.keys(c0)).forEach(function(k){ keys[k]=1; });
+    var ks = Object.keys(keys).sort(function(a,b){ return (c1[b]||0)-(c1[a]||0); });
+    if(ks.length) h += '<h2>حسب النوع (ده / اللي فات)</h2>';
+    ks.forEach(function(k){ h += '<div class="line"><span>'+esc(k)+'</span><span>'+fmt(c1[k]||0)+' / '+fmt(c0[k]||0)+'</span></div>'; });
+    if(!cur.length && !prev.length) h += '<p class="empty">مفيش عمليات للمقارنة لسه.</p>';
+    $("cmpOut").innerHTML = h + '</div>';
+  }
+  $("cmpMode").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    cmpMode = b.getAttribute("data-m");
+    Array.prototype.forEach.call($("cmpMode").children, function(x){ x.classList.toggle("on", x === b); });
+    renderCmp();
+  });
+  $("cmpFold").addEventListener("toggle", renderCmp);
+  // ===== نهاية مقارنة وبحث =====
+
+  // ===== بحث =====
+  var srT = "out";
+  function renderSearch(){
+    var f = $("srFrom").value, t = $("srTo").value;
+    if(f && t && f > t){ var tmp = f; f = t; t = tmp; }
+    var a = items.filter(function(x){
+      if(srT === "out" && !isOut(x)) return false;
+      if(srT === "in" && isOut(x)) return false;
+      if(f && x.date < f) return false;
+      if(t && x.date > t) return false;
+      return true;
+    }).sort(function(x,y){ return y.date.localeCompare(x.date) || y.id - x.id; });
+    if(!a.length){ $("srOut").innerHTML = '<p class="empty">مفيش نتيجة.</p>'; return; }
+    var outs = a.filter(isOut), ins = a.filter(function(x){ return !isOut(x); });
+    var h = '<div class="wk">';
+    if(srT !== "in") h += '<div class="line"><span>إجمالي الصرف</span><span>'+fmt(sum(outs))+' جنيه</span></div>';
+    if(srT !== "out") h += '<div class="line"><span>إجمالي الإضافات</span><span>'+fmt(sum(ins))+' جنيه</span></div>';
+    if(srT === "out"){
+      var c = byCat(a), ks = Object.keys(c).sort(function(x,y){ return c[y]-c[x]; });
+      if(ks.length > 1) h += '<h2>حسب النوع</h2>';
+      if(ks.length > 1) ks.forEach(function(k){ h += '<div class="line"><span>'+esc(k)+'</span><span>'+fmt(c[k])+' جنيه</span></div>'; });
+    }
+    h += '<h2>العمليات ('+a.length+')</h2></div>';
+    h += a.map(function(x){
+      return '<div class="item"><div class="main"><div class="cat">'+esc(x.cat)+'</div><div class="note">'+x.date+(x.note?' - '+esc(x.note):'')+'</div></div><div class="amt '+(isOut(x)?'out':'in')+'" dir="ltr">'+(isOut(x)?'−':'+')+fmt(x.amount)+'</div></div>';
+    }).join("");
+    $("srOut").innerHTML = h;
+  }
+  (function(){ var n = new Date(); $("srFrom").value = n.getFullYear()+"-"+pad(n.getMonth()+1)+"-01"; $("srTo").value = today(); })();
+  $("srType").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    srT = b.getAttribute("data-t");
+    Array.prototype.forEach.call($("srType").children, function(x){ x.classList.toggle("on", x === b); });
+    renderSearch();
+  });
+  ["srFrom","srTo"].forEach(function(id){ $(id).addEventListener("input", renderSearch); });
+  $("srFold").addEventListener("toggle", renderSearch);
+  function renderNm(){
+    var q = $("srName").value.trim().toLowerCase(), am = "";
+    if(!q){ $("nmOut").innerHTML = ""; return; }
+    var a = items.filter(function(x){
+      if(q && (x.cat + " " + (x.note||"")).toLowerCase().indexOf(q) < 0) return false;
+      if(am !== "" && Math.abs(x.amount - parseFloat(am)) > 0.001) return false;
+      return true;
+    }).sort(function(x,y){ return y.date.localeCompare(x.date) || y.id - x.id; });
+    if(!a.length){ $("nmOut").innerHTML = '<p class="empty">مفيش نتيجة.</p>'; return; }
+    $("nmOut").innerHTML = '<p class="sub">'+a.length+' نتيجة</p>' + a.map(function(x){
+      return '<div class="item"><div class="main"><div class="cat">'+esc(x.cat)+'</div><div class="note">'+x.date+(x.note?' - '+esc(x.note):'')+'</div></div><div class="amt '+(isOut(x)?'out':'in')+'" dir="ltr">'+(isOut(x)?'−':'+')+fmt(x.amount)+'</div></div>';
+    }).join("");
+  }
+  $("srName").addEventListener("input", renderNm);
+  function renderAm(){
+    var am = $("srAmt").value;
+    if(am === ""){ $("amOut").innerHTML = ""; return; }
+    var v = parseFloat(am);
+    var a = items.filter(function(x){ return Math.abs(x.amount - v) < 0.001; })
+                 .sort(function(x,y){ return y.date.localeCompare(x.date) || y.id - x.id; });
+    if(!a.length){ $("amOut").innerHTML = '<p class="empty">مفيش عمليات بالمبلغ ده.</p>'; return; }
+    var outs = a.filter(isOut);
+    var h = '<p class="sub">صرفت المبلغ ده '+outs.length+' مرة (إجمالي '+fmt(sum(outs))+' جنيه)'+(a.length>outs.length?'، وحطيته '+(a.length-outs.length)+' مرة':'')+'</p>';
+    h += a.map(function(x){
+      return '<div class="item"><div class="main"><div class="cat">'+esc(x.cat)+'</div><div class="note">'+x.date+(x.note?' - '+esc(x.note):'')+'</div></div><div class="amt '+(isOut(x)?'out':'in')+'" dir="ltr">'+(isOut(x)?'−':'+')+fmt(x.amount)+'</div></div>';
+    }).join("");
+    $("amOut").innerHTML = h;
+  }
+  $("srAmt").addEventListener("input", renderAm);
+  // ===== نهاية بحث =====
+
+  // ===== صفحتين =====
+  $("menuBtn").addEventListener("click", function(){
+    var h = !$("menu").hidden; $("menu").hidden = h; $("menuBtn").setAttribute("aria-expanded", h ? "false" : "true");
+  });
+  $("menu").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    var p = b.getAttribute("data-p");
+    Array.prototype.forEach.call($("menu").children, function(x){ x.classList.toggle("on", x === b); });
+    document.querySelector(".pg1").hidden = p !== "1";
+    document.querySelector(".pg2").hidden = p !== "2";
+    document.querySelector(".pg3").hidden = p !== "3";
+    $("menu").hidden = true; $("menuBtn").setAttribute("aria-expanded","false");
+    window.scrollTo(0,0);
+  });
+  // ===== نهاية صفحتين =====
 
   // ===== الرقم السري =====
   var PKEY = "pin-hash-v1";
