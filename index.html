@@ -114,6 +114,7 @@ body.locked main{display:none}
 .menu[hidden]{display:none}
 .menu button{background:transparent;border:0;border-radius:9px;padding:10px;font-weight:500;color:var(--muted);cursor:pointer;text-align:start}
 .menu button.on{background:var(--bar);color:var(--ink)}
+.walstrip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.wchip{background:#1d3a52;border:1px solid #2c5b80;border-radius:12px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;gap:6px}.wchip span{font-size:.8rem;color:#bcd6ea}.wchip b{font-size:1rem;color:#fff}.wchip b.neg{color:var(--danger)}
 </style>
 </head>
 <body class="locked">
@@ -138,8 +139,9 @@ body.locked main{display:none}
   </div>
   <div class="total" style="margin-top:2px"><span class="num" id="total" dir="ltr">0</span><span class="cur">جنيه</span></div>
   <p class="sub" id="count"></p>
-  <section class="card"><details class="fold" id="catFold"><summary>المصروفات حسب النوع</summary><ul class="cats" id="cats" style="margin:10px 0 0"></ul></details></section>
 
+
+  <section class="card"><details class="fold" id="walFold"><summary>فلوسي فين؟</summary><ul class="cats" id="walOut" style="margin:10px 0 0"></ul></details></section>
 
   <form id="form" autocomplete="off">
     <div class="seg" role="radiogroup" aria-label="نوع العملية">
@@ -154,6 +156,9 @@ body.locked main{display:none}
         <select id="cat">
           <option>مواصلات</option><option>أكل وشرب</option><option>باقة إنترنت</option><option>ترفيه</option><option>مستلزمات الشغل</option><option>جمعية ٧</option><option>جمعية ١</option><option>شيء آخر</option>
         </select>
+      </label>
+      <label>دفعت منين
+        <select id="wal"><option>في إيدي وربنا يسترها</option><option>فودافون كاش</option><option>إنستا باي</option><option>أورانج كاش</option></select>
       </label>
     </div>
     <div id="srcwrap" hidden>
@@ -179,7 +184,8 @@ body.locked main{display:none}
     </div>
     <div id="list"></div>
     </details>
-  </section>
+  </section>  <section class="card"><details class="fold" id="catFold"><summary>المصروفات حسب النوع</summary><ul class="cats" id="cats" style="margin:10px 0 0"></ul></details></section>
+
 
   </div>
   <div class="pg2" hidden>
@@ -296,7 +302,23 @@ body.locked main{display:none}
   var $ = function(id){ return document.getElementById(id); };
   $("month").value = today().slice(0,7);
 
+
+  var WALS = ["فودافون كاش","إنستا باي","أورانج كاش","في إيدي وربنا يسترها"];
+  function renderWal(){
+    var h = "", rowsW = WALS.map(function(w){
+      var inn = sum(items.filter(function(x){ return !isOut(x) && x.cat === w; }));
+      var out = sum(items.filter(function(x){ return isOut(x) && x.wal === w; }));
+      return { n: w === "في إيدي وربنا يسترها" ? "كاش في إيدي" : w, v: inn - out };
+    });
+    var mx = Math.max.apply(null, rowsW.map(function(r){ return r.v; }).concat([0]));
+    rowsW.forEach(function(r){
+      var p = mx > 0 ? Math.max(Math.round(Math.max(r.v,0)/mx*100), 6) : 6;
+      h += '<li><i style="width:'+p+'%"></i><span>'+esc(r.n)+'</span><span dir="ltr">'+fmt(r.v)+' جنيه</span></li>';
+    });
+    $("walOut").innerHTML = h;
+  }
   function render(){
+    renderWal();
     var m = $("month").value;
     var list = items.filter(function(x){ return x.date.slice(0,7) === m; })
                     .sort(function(a,b){ return b.date.localeCompare(a.date) || b.id - a.id; });
@@ -376,7 +398,7 @@ body.locked main{display:none}
     if(!(amount > 0)){ $("msg").textContent = "اكتب مبلغ أكبر من صفر."; $("amount").focus(); return; }
     $("msg").textContent = "";
     var date = today();
-    items.push({ id: Date.now(), amount: amount, cat: type === "in" ? $("src").value : $("cat").value, type: type, note: $("note").value.trim(), date: date });
+    items.push({ id: Date.now(), amount: amount, cat: type === "in" ? $("src").value : $("cat").value, wal: type === "in" ? "" : $("wal").value, type: type, note: $("note").value.trim(), date: date });
     save();
     $("month").value = date.slice(0,7);
     $("amount").value = ""; $("note").value = "";
@@ -429,8 +451,8 @@ body.locked main{display:none}
     $("owedList").innerHTML = owed.slice().sort(function(a,b){ return b.id - a.id; }).map(function(x){
       return '<div class="item"><div class="main"><div class="cat">'+esc(x.name)+'</div></div>'
         + '<div class="amt in" dir="ltr">'+fmt(x.amount)+'</div>'
-        + (oPending === x.id ? '<button class="del confirm" data-id="'+x.id+'" dir="ltr">Delete</button>' : '<button class="del" data-id="'+x.id+'" aria-label="حذف">✕</button>')
-        + '</div>';
+        + '<button class="del" data-id="'+x.id+'" aria-label="دفعلي">✕</button></div>'
+        + (oPending === x.id ? '<div class="paywrap" style="display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 10px"><div style="width:100%;color:var(--muted);font-size:.85rem">دفعلك ازاي؟</div><button type="button" class="add paysrc" data-id="'+x.id+'" data-s="فودافون كاش">فودافون كاش</button><button type="button" class="add paysrc" data-id="'+x.id+'" data-s="إنستا باي">إنستا باي</button><button type="button" class="add paysrc" data-id="'+x.id+'" data-s="أورانج كاش">أورانج كاش</button><button type="button" class="add paysrc" data-id="'+x.id+'" data-s="في إيدي وربنا يسترها">كاش في إيدي</button><button type="button" class="add paysrc" data-id="'+x.id+'" data-s="" style="background:var(--surface);color:var(--ink);border:1px solid var(--line)">بس شيله</button></div>' : '');
     }).join("");
   }
   $("owedForm").addEventListener("submit", function(e){
@@ -444,14 +466,20 @@ body.locked main{display:none}
     renderOwed(); $("oName").focus();
   });
   $("owedList").addEventListener("click", function(e){
+    var p = e.target.closest(".paysrc");
+    if(p){
+      var pid = Number(p.getAttribute("data-id")), src = p.getAttribute("data-s");
+      var it = owed.filter(function(x){ return x.id === pid; })[0];
+      if(it && src){ items.push({ id: Date.now(), amount: it.amount, cat: src, type: "in", note: "سداد من " + it.name, date: ds(new Date()) }); save(); render(); }
+      owed = owed.filter(function(x){ return x.id !== pid; }); oPending = null; saveOwed(); renderOwed(); return;
+    }
     var b = e.target.closest(".del"); if(!b) return;
     var id = Number(b.getAttribute("data-id"));
-    if(oPending === id){ owed = owed.filter(function(x){ return x.id !== id; }); oPending = null; saveOwed(); }
-    else { oPending = id; }
+    oPending = (oPending === id) ? null : id;
     renderOwed();
   });
   document.addEventListener("click", function(e){
-    if(oPending !== null && !e.target.closest(".del")){ oPending = null; renderOwed(); }
+    if(oPending !== null && !e.target.closest(".del") && !e.target.closest(".paysrc")){ oPending = null; renderOwed(); }
   });
   var DKEY = "debt-v1", debt = [], dPending = null;
   try { debt = JSON.parse(localStorage.getItem(DKEY) || "[]"); if(!Array.isArray(debt)) debt = []; } catch(e){ debt = []; }
