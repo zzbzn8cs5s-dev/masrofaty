@@ -189,6 +189,15 @@ body.locked main{display:none}
       <div id="owedList"></div>
     </details>
   </section>
+  <section class="card">
+    <details class="fold" id="bkFold"><summary>نسخة احتياطية</summary>
+      <p class="sub" style="margin:0 0 10px">احفظ نسخة من مصروفاتك، أو استرجعها لو غيرت الموبايل.</p>
+      <button class="add" type="button" id="bkExport" style="width:100%;margin-bottom:10px">حفظ نسخة (مشاركة أو نسخ)</button>
+      <textarea id="bkText" rows="4" placeholder="للاسترجاع: الصق النسخة هنا" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--ink)"></textarea>
+      <button class="add" type="button" id="bkImport" style="width:100%;margin-top:8px">استرجاع من النسخة</button>
+      <p class="msg" id="bkMsg" role="status"></p>
+    </details>
+  </section>
 </main>
 
 <script>
@@ -365,6 +374,30 @@ body.locked main{display:none}
   renderOwed();
   render();
 
+
+  // ===== نسخة احتياطية =====
+  function bkMsg(t){ $("bkMsg").textContent = t; }
+  $("bkExport").addEventListener("click", function(){
+    var txt = JSON.stringify({ v: 1, items: items, owed: owed });
+    if(navigator.share){
+      navigator.share({ title: "نسخة مصروفاتي", text: txt }).then(function(){ bkMsg("تمام."); }).catch(function(){});
+      return;
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ bkMsg("اتنسخت. الصقها في أي مكان واحفظها."); }, function(){ $("bkText").value = txt; bkMsg("انسخ النص اللي في الخانة واحفظه."); });
+    } else { $("bkText").value = txt; bkMsg("انسخ النص اللي في الخانة واحفظه."); }
+  });
+  $("bkImport").addEventListener("click", function(){
+    var d;
+    try { d = JSON.parse($("bkText").value.trim()); } catch(e){ bkMsg("النسخة مش مظبوطة."); return; }
+    if(!d || !Array.isArray(d.items)){ bkMsg("النسخة مش مظبوطة."); return; }
+    if(!confirm("ده هيستبدل المصروفات الحالية بالنسخة. تكمل؟")) return;
+    items = d.items; owed = Array.isArray(d.owed) ? d.owed : [];
+    save(); saveOwed(); render(); renderOwed();
+    $("bkText").value = ""; bkMsg("اتسترجعت.");
+  });
+  // ===== نهاية النسخة الاحتياطية =====
+
   // ===== الرقم السري =====
   var PKEY = "pin-hash-v1";
   var lockEl = $("lock");
@@ -406,6 +439,10 @@ body.locked main{display:none}
   $("lockBtn").addEventListener("click", tryLock);
   ["pin","pin2"].forEach(function(id){
     $(id).addEventListener("keydown", function(e){ if(e.key === "Enter") tryLock(); });
+  });
+  $("pin").addEventListener("input", function(){
+    var has = false; try { has = !!localStorage.getItem(PKEY); } catch(e){}
+    if(has && /^[0-9]{4}$/.test($("pin").value)) tryLock();
   });
   document.addEventListener("visibilitychange", function(){ if(document.hidden) showLock(); });
   showLock();
