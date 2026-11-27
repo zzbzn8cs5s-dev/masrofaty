@@ -95,9 +95,26 @@ form.mini .add{grid-column:1 / -1}
 .fold summary::after{content:"▾";color:var(--muted)}
 .fold[open] summary::after{content:"▴"}
 .fold[open] summary{margin-bottom:8px}
+
+#lock{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+#lock[hidden]{display:none}
+#lock h2{margin:0;font-size:1.3rem}
+#lock p{margin:0;color:var(--muted)}
+#lock input{width:200px;text-align:center;font-size:1.8rem;letter-spacing:.5em;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px}
+#lock button{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:12px 36px;font-weight:700;cursor:pointer}
+#lockMsg{color:var(--danger);min-height:1.2em}
+body.locked main{display:none}
 </style>
 </head>
-<body>
+<body class="locked">
+<div id="lock" hidden>
+  <h2 id="lockTitle">مصروفاتي</h2>
+  <p id="lockSub"></p>
+  <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="الرقم السري">
+  <input id="pin2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="تأكيد الرقم السري" hidden>
+  <p id="lockMsg" role="alert"></p>
+  <button id="lockBtn" type="button">دخول</button>
+</div>
 <main>
   <div class="top">
     <h1>مصروفاتي</h1>
@@ -111,7 +128,7 @@ form.mini .add{grid-column:1 / -1}
   <p class="sub" id="count"></p>
   <ul class="cats" id="cats"></ul>
 
-  <section class="card" id="week" aria-live="polite"></section>
+  <section class="card" id="weekCard"><details class="fold" id="weekFold"><summary>ملخص الأسبوع</summary><div id="week" aria-live="polite"></div></details></section>
 
   <form id="form" autocomplete="off">
     <div class="seg" role="radiogroup" aria-label="نوع العملية">
@@ -143,13 +160,14 @@ form.mini .add{grid-column:1 / -1}
   </form>
 
   <section class="card">
-    <h3>سجل العمليات</h3>
+    <details class="fold" id="logFold"><summary>سجل العمليات</summary>
     <div class="flt" id="flt" role="radiogroup" aria-label="تصفية السجل">
       <button type="button" class="on" data-f="all">الكل</button>
       <button type="button" data-f="out">خصم</button>
       <button type="button" data-f="in">إضافة</button>
     </div>
     <div id="list"></div>
+    </details>
   </section>
 
   <section class="card" id="owed">
@@ -236,7 +254,7 @@ form.mini .add{grid-column:1 / -1}
     var addedW = sum(all.filter(function(x){ return !isOut(x); }));
     var prev = items.filter(function(x){ return x.date >= P && x.date < S && isOut(x); });
     var t = sum(cur), pt = sum(prev);
-    var html = '<h3>ملخص الأسبوع</h3><div class="wk">';
+    var html = '<div class="wk">';
     if(!all.length){
       html += '<div class="line">مفيش مصروفات الأسبوع ده لحد دلوقتي (الأسبوع بيبدأ من السبت).</div></div>';
       $("week").innerHTML = html; return;
@@ -346,6 +364,52 @@ form.mini .add{grid-column:1 / -1}
   });
   renderOwed();
   render();
+
+  // ===== الرقم السري =====
+  var PKEY = "pin-hash-v1";
+  var lockEl = $("lock");
+  function hashPin(p){
+    var data = new TextEncoder().encode("masrofaty:" + p);
+    if(window.crypto && crypto.subtle){
+      return crypto.subtle.digest("SHA-256", data).then(function(b){
+        return Array.prototype.map.call(new Uint8Array(b), function(x){ return ("0"+x.toString(16)).slice(-2); }).join("");
+      });
+    }
+    var h = 5381; for(var i=0;i<p.length;i++) h = ((h<<5)+h) + p.charCodeAt(i);
+    return Promise.resolve("s"+h);
+  }
+  function showLock(){
+    document.body.classList.add("locked");
+    lockEl.hidden = false;
+    $("pin").value = ""; $("pin2").value = ""; $("lockMsg").textContent = "";
+    var has = false; try { has = !!localStorage.getItem(PKEY); } catch(e){}
+    $("pin2").hidden = has;
+    $("lockSub").textContent = has ? "اكتب الرقم السري" : "اختار رقم سري من ٤ أرقام، واكتبه مرتين";
+    $("lockBtn").textContent = has ? "دخول" : "حفظ ودخول";
+    setTimeout(function(){ $("pin").focus(); }, 50);
+  }
+  function unlock(){ lockEl.hidden = true; document.body.classList.remove("locked"); }
+  function tryLock(){
+    var a = $("pin").value, has = false;
+    try { has = !!localStorage.getItem(PKEY); } catch(e){}
+    if(!/^[0-9]{4}$/.test(a)){ $("lockMsg").textContent = "اكتب ٤ أرقام."; return; }
+    if(has){
+      hashPin(a).then(function(h){
+        if(h === localStorage.getItem(PKEY)) unlock();
+        else { $("lockMsg").textContent = "الرقم غلط."; $("pin").value = ""; }
+      });
+    } else {
+      if(a !== $("pin2").value){ $("lockMsg").textContent = "الرقمين مش زي بعض."; return; }
+      hashPin(a).then(function(h){ try { localStorage.setItem(PKEY, h); } catch(e){} unlock(); });
+    }
+  }
+  $("lockBtn").addEventListener("click", tryLock);
+  ["pin","pin2"].forEach(function(id){
+    $(id).addEventListener("keydown", function(e){ if(e.key === "Enter") tryLock(); });
+  });
+  document.addEventListener("visibilitychange", function(){ if(document.hidden) showLock(); });
+  showLock();
+  // ===== نهاية الرقم السري =====
 })();
 </script>
 <script>
