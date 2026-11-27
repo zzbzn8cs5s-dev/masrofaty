@@ -107,7 +107,7 @@ body.locked main{display:none}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0 4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
 .tabs button{background:transparent;border:0;border-radius:9px;padding:9px;font-weight:500;color:var(--muted);cursor:pointer}
 .tabs button.on{background:var(--bar);color:var(--ink)}
-.pg2[hidden],.pg1[hidden],.pg3[hidden]{display:none}
+.pg2[hidden],.pg1[hidden],.pg3[hidden],.pg4[hidden],.pg5[hidden]{display:none}#debtList .item{background:var(--bg)}
 #menuBtn{background:var(--surface);border:1px solid var(--line);border-radius:10px;width:40px;height:36px;display:grid;align-content:center;justify-items:center;gap:4px;cursor:pointer;padding:0}
 #menuBtn span{display:block;width:18px;height:2px;background:var(--ink);border-radius:2px}
 .menu{display:grid;gap:4px;margin:10px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px}
@@ -131,7 +131,7 @@ body.locked main{display:none}
     <input type="month" id="month" aria-label="الشهر">
     <button type="button" id="menuBtn" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
-  <div class="menu" id="menu" hidden><button type="button" class="on" data-p="1">الرئيسية</button><button type="button" data-p="2">بحث ومقارنة</button><button type="button" data-p="3">النسخة الاحتياطية</button></div>
+  <div class="menu" id="menu" hidden><button type="button" class="on" data-p="1">الرئيسية</button><button type="button" data-p="2">بحث ومقارنة</button><button type="button" data-p="4">ليا كام</button><button type="button" data-p="5">عليا كام</button><button type="button" data-p="3">النسخة الاحتياطية</button></div>
   <div class="pg1">
   <div class="row2" style="margin-top:18px">
     <p class="sub" style="margin:0">رصيد الشهر (الإضافات ناقص الخصومات)</p>
@@ -181,25 +181,6 @@ body.locked main{display:none}
     </details>
   </section>
 
-  <section class="card" id="owed">
-    <div class="row2" style="margin-bottom:8px">
-      <h3 style="margin:0">ليك بره</h3>
-    </div>
-    <div class="wk">
-      <div class="big" id="owedTotal" dir="ltr">0</div>
-      <div class="line">إجمالي اللي ليك عند الناس (جنيه)</div>
-    </div>
-    <form class="mini" id="owedForm" autocomplete="off">
-      <input id="oName" type="text" maxlength="30" placeholder="اسم الشخص">
-      <input id="oAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="المبلغ">
-      <button class="add" type="submit">إضافة</button>
-    </form>
-    <p class="msg" id="oMsg" role="alert"></p>
-    <details class="fold">
-      <summary id="owedSum">التفاصيل</summary>
-      <div id="owedList"></div>
-    </details>
-  </section>
   </div>
   <div class="pg2" hidden>
   <section class="card" id="weekCard"><details class="fold" id="weekFold"><summary>ملخص الأسبوع</summary><div id="week" aria-live="polite"></div></details></section>
@@ -245,6 +226,48 @@ body.locked main{display:none}
     </details>
   </section>
   </div>
+  <div class="pg4" hidden>
+  <section class="card" id="owed">
+    <div class="row2" style="margin-bottom:8px">
+      <h3 style="margin:0">ليا كام</h3>
+    </div>
+    <div class="wk">
+      <div class="big" id="owedTotal" dir="ltr">0</div>
+      <div class="line">إجمالي اللي ليك عند الناس (جنيه)</div>
+    </div>
+    <form class="mini" id="owedForm" autocomplete="off">
+      <input id="oName" type="text" maxlength="30" placeholder="اسم الشخص">
+      <input id="oAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="المبلغ">
+      <button class="add" type="submit">إضافة</button>
+    </form>
+    <p class="msg" id="oMsg" role="alert"></p>
+    <details class="fold">
+      <summary id="owedSum">التفاصيل</summary>
+      <div id="owedList"></div>
+    </details>
+  </section>
+  </div>
+  <div class="pg5" hidden>
+  <section class="card" id="debt">
+    <div class="row2" style="margin-bottom:8px">
+      <h3 style="margin:0">عليا كام</h3>
+    </div>
+    <div class="wk">
+      <div class="big" id="debtTotal" dir="ltr">0</div>
+      <div class="line">إجمالي اللي عليك للناس (جنيه)</div>
+    </div>
+    <form class="mini" id="debtForm" autocomplete="off">
+      <input id="dName" type="text" maxlength="30" placeholder="اسم الشخص">
+      <input id="dAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="المبلغ">
+      <button class="add" type="submit">إضافة</button>
+    </form>
+    <p class="msg" id="dMsg" role="alert"></p>
+    <details class="fold">
+      <summary id="debtSum">التفاصيل</summary>
+      <div id="debtList"></div>
+    </details>
+  </section>
+  </div>
   <div class="pg3" hidden>
   <section class="card">
     <details class="fold" id="bkFold"><summary>نسخة احتياطية</summary>
@@ -287,9 +310,10 @@ body.locked main{display:none}
 
     var byCat = {};
     outs.forEach(function(x){ byCat[x.cat] = (byCat[x.cat]||0) + x.amount; });
+    Array.prototype.forEach.call($("cat").options, function(o){ if(!(o.value in byCat)) byCat[o.value] = 0; });
     var rows = Object.keys(byCat).sort(function(a,b){ return byCat[b]-byCat[a]; });
     $("cats").innerHTML = rows.map(function(c){
-      var p = total ? Math.round(byCat[c]/total*100) : 0;
+      var p = Math.max(total ? Math.round(byCat[c]/total*100) : 0, 6);
       return '<li><i style="width:'+p+'%"></i><span>'+esc(c)+'</span><span>'+fmt(byCat[c])+' جنيه</span></li>';
     }).join("");
 
@@ -400,7 +424,7 @@ body.locked main{display:none}
   function saveOwed(){ try { localStorage.setItem(OKEY, JSON.stringify(owed)); } catch(e){} }
   function renderOwed(){
     $("owedTotal").textContent = fmt(sum(owed));
-    $("owedSum").textContent = "تفاصيل اللي ليك بره (" + owed.length + ")";
+    $("owedSum").textContent = "تفاصيل ليا كام (" + owed.length + ")";
     if(!owed.length){ $("owedList").innerHTML = '<p class="empty">مفيش حد واخد منك حاجة. أضف أول اسم فوق.</p>'; return; }
     $("owedList").innerHTML = owed.slice().sort(function(a,b){ return b.id - a.id; }).map(function(x){
       return '<div class="item"><div class="main"><div class="cat">'+esc(x.name)+'</div></div>'
@@ -429,14 +453,48 @@ body.locked main{display:none}
   document.addEventListener("click", function(e){
     if(oPending !== null && !e.target.closest(".del")){ oPending = null; renderOwed(); }
   });
-  renderOwed();
+  var DKEY = "debt-v1", debt = [], dPending = null;
+  try { debt = JSON.parse(localStorage.getItem(DKEY) || "[]"); if(!Array.isArray(debt)) debt = []; } catch(e){ debt = []; }
+  function saveDebt(){ try { localStorage.setItem(DKEY, JSON.stringify(debt)); } catch(e){} }
+  function renderDebt(){
+    $("debtTotal").textContent = fmt(sum(debt));
+    $("debtSum").textContent = "تفاصيل عليا كام (" + debt.length + ")";
+    if(!debt.length){ $("debtList").innerHTML = '<p class="empty">مفيش حد ليه عندك حاجة. أضف أول اسم فوق.</p>'; return; }
+    $("debtList").innerHTML = debt.slice().sort(function(a,b){ return b.id - a.id; }).map(function(x){
+      return '<div class="item"><div class="main"><div class="cat">'+esc(x.name)+'</div></div>'
+        + '<div class="amt out" dir="ltr">'+fmt(x.amount)+'</div>'
+        + (dPending === x.id ? '<button class="del confirm" data-id="'+x.id+'" dir="ltr">Delete</button>' : '<button class="del" data-id="'+x.id+'" aria-label="حذف">✕</button>')
+        + '</div>';
+    }).join("");
+  }
+  $("debtForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var name = $("dName").value.trim(), amt = parseFloat($("dAmt").value);
+    if(!name){ $("dMsg").textContent = "اكتب اسم الشخص."; $("dName").focus(); return; }
+    if(!(amt > 0)){ $("dMsg").textContent = "اكتب مبلغ أكبر من صفر."; $("dAmt").focus(); return; }
+    $("dMsg").textContent = "";
+    debt.push({ id: Date.now(), name: name, amount: amt });
+    saveDebt(); $("dName").value = ""; $("dAmt").value = "";
+    renderDebt(); $("dName").focus();
+  });
+  $("debtList").addEventListener("click", function(e){
+    var b = e.target.closest(".del"); if(!b) return;
+    var id = Number(b.getAttribute("data-id"));
+    if(dPending === id){ debt = debt.filter(function(x){ return x.id !== id; }); dPending = null; saveDebt(); }
+    else { dPending = id; }
+    renderDebt();
+  });
+  document.addEventListener("click", function(e){
+    if(dPending !== null && !e.target.closest(".del")){ dPending = null; renderDebt(); }
+  });
+  renderOwed(); renderDebt();
   render();
 
 
   // ===== نسخة احتياطية =====
   function bkMsg(t){ $("bkMsg").textContent = t; }
   $("bkExport").addEventListener("click", function(){
-    var txt = JSON.stringify({ v: 1, items: items, owed: owed });
+    var txt = JSON.stringify({ v: 1, items: items, owed: owed, debt: debt });
     if(navigator.share){
       navigator.share({ title: "نسخة مصروفاتي", text: txt }).then(function(){ bkMsg("تمام."); }).catch(function(){});
       return;
@@ -450,8 +508,8 @@ body.locked main{display:none}
     try { d = JSON.parse($("bkText").value.trim()); } catch(e){ bkMsg("النسخة مش مظبوطة."); return; }
     if(!d || !Array.isArray(d.items)){ bkMsg("النسخة مش مظبوطة."); return; }
     if(!confirm("ده هيستبدل المصروفات الحالية بالنسخة. تكمل؟")) return;
-    items = d.items; owed = Array.isArray(d.owed) ? d.owed : [];
-    save(); saveOwed(); render(); renderOwed();
+    items = d.items; owed = Array.isArray(d.owed) ? d.owed : []; debt = Array.isArray(d.debt) ? d.debt : [];
+    save(); saveOwed(); saveDebt(); render(); renderOwed(); renderDebt();
     $("bkText").value = ""; bkMsg("اتسترجعت.");
   });
   // ===== نهاية النسخة الاحتياطية =====
@@ -578,6 +636,8 @@ body.locked main{display:none}
     document.querySelector(".pg1").hidden = p !== "1";
     document.querySelector(".pg2").hidden = p !== "2";
     document.querySelector(".pg3").hidden = p !== "3";
+    document.querySelector(".pg4").hidden = p !== "4";
+    document.querySelector(".pg5").hidden = p !== "5";
     $("menu").hidden = true; $("menuBtn").setAttribute("aria-expanded","false");
     window.scrollTo(0,0);
   });
